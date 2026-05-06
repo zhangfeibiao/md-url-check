@@ -15,7 +15,7 @@ const { positionals, values } = parseArgs({ options, allowPositionals: true });
 
 const globPattern = positionals[0];
 if (!globPattern) {
-  console.error('Usage: mdcheck <glob-pattern> [-c concurrency]');
+  console.error('Usage: mdurlcheck <glob-pattern> [-c concurrency]');
   process.exit(1);
 }
 

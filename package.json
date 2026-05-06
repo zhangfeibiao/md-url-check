@@ -1,10 +1,10 @@
 {
-  "name": "mdcheck",
+  "name": "mdurlcheck",
   "version": "1.0.0",
   "description": "Check URLs in Markdown files",
   "main": "src/index.js",
   "bin": {
-    "mdcheck": "./bin/mdcheck.js"
+    "mdurlcheck": "./bin/mdurlcheck.js"
   },
   "scripts": {
     "test": "node test/"

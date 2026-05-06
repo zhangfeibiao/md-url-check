@@ -1,4 +1,4 @@
-# mdcheck
+# mdurlcheck
 
 检查 Markdown 文件中的链接是否有效。
 
@@ -11,8 +11,8 @@ npm install -g
 ## 使用
 
 ```bash
-mdcheck "docs/**/*.md"
-mdcheck "**/*.md" -c 20
+mdurlcheck "docs/**/*.md"
+mdurlcheck "**/*.md" -c 20
 ```
 
 ## 选项

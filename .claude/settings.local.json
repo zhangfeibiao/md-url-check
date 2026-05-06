@@ -4,7 +4,17 @@
       "Bash(git init *)",
       "Bash(git remote *)",
       "Bash(git add *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(npm install *)",
+      "Bash(chmod +x *)",
+      "Bash(/Users/zhangfeibiao/blog/superpower-learn/bin/mdcheck.js *)",
+      "Bash(git *)",
+      "Bash(node *)",
+      "Bash(./bin/mdcheck.js *)",
+      "Bash(npm test *)",
+      "Bash(echo \"Exit code: $?\")",
+      "Bash(gh pr *)",
+      "Bash(./bin/mdurlcheck.js \"test.md\")"
     ]
   }
 }
