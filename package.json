@@ -1,0 +1,19 @@
+{
+  "name": "mdcheck",
+  "version": "1.0.0",
+  "description": "Check URLs in Markdown files",
+  "main": "src/index.js",
+  "bin": {
+    "mdcheck": "./bin/mdcheck.js"
+  },
+  "scripts": {
+    "test": "node test/"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "micromatch": "^4.0.5"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}
