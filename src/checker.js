@@ -1,40 +1,68 @@
 const http = require('http');
 const https = require('https');
 
+const CONNECT_TIMEOUT = 5000;
+const READ_TIMEOUT = 5000;
+const MAX_REDIRECTS = 5;
+
 function checkUrl(url) {
   return new Promise((resolve) => {
-    const parsedUrl = new URL(url);
-    const isHttps = parsedUrl.protocol === 'https:';
-    const client = isHttps ? https : http;
+    let redirectCount = 0;
 
-    const options = {
-      hostname: parsedUrl.hostname,
-      port: parsedUrl.port || (isHttps ? 443 : 80),
-      path: parsedUrl.pathname + parsedUrl.search,
-      method: 'HEAD',
-      timeout: 5000,
-      maxRedirects: 5
-    };
+    function tryRequest(currentUrl) {
+      const parsedUrl = new URL(currentUrl);
+      const isHttps = parsedUrl.protocol === 'https:';
+      const client = isHttps ? https : http;
 
-    const req = client.request(options, (res) => {
-      if (res.statusCode >= 200 && res.statusCode < 300) {
-        resolve({ url, status: 'OK', statusCode: res.statusCode });
-      } else {
-        resolve({ url, status: 'FAILED', statusCode: res.statusCode });
-      }
-    });
+      const options = {
+        hostname: parsedUrl.hostname,
+        port: parsedUrl.port || (isHttps ? 443 : 80),
+        path: parsedUrl.pathname + parsedUrl.search,
+        method: 'HEAD',
+        timeout: CONNECT_TIMEOUT
+      };
 
-    req.on('error', (err) => {
-      resolve({ url, status: 'FAILED', error: err.message });
-    });
+      const req = client.request(options, (res) => {
+        // Handle redirects (3xx)
+        if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+          if (redirectCount >= MAX_REDIRECTS) {
+            resolve({ url, status: 'FAILED', error: 'Too many redirects' });
+            return;
+          }
+          redirectCount++;
+          // Handle relative redirects
+          const redirectUrl = new URL(res.headers.location, currentUrl).toString();
+          tryRequest(redirectUrl);
+          return;
+        }
 
-    req.on('timeout', () => {
-      req.destroy();
-      resolve({ url, status: 'FAILED', error: 'Timeout' });
-    });
+        // Success: 2xx
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          resolve({ url, status: 'OK', statusCode: res.statusCode });
+        } else {
+          // Other status codes (4xx, 5xx) are failures
+          resolve({ url, status: 'FAILED', statusCode: res.statusCode });
+        }
+      });
 
-    req.setTimeout(5000);
-    req.end();
+      req.on('error', (err) => {
+        resolve({ url, status: 'FAILED', error: err.message });
+      });
+
+      req.on('timeout', () => {
+        req.destroy();
+        resolve({ url, status: 'FAILED', error: 'Timeout' });
+      });
+
+      req.setTimeout(READ_TIMEOUT, () => {
+        req.destroy();
+        resolve({ url, status: 'FAILED', error: 'Timeout' });
+      });
+
+      req.end();
+    }
+
+    tryRequest(url);
   });
 }
 

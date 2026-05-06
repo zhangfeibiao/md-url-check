@@ -14,7 +14,12 @@
       "Bash(npm test *)",
       "Bash(echo \"Exit code: $?\")",
       "Bash(gh pr *)",
-      "Bash(./bin/mdurlcheck.js \"test.md\")"
+      "Bash(./bin/mdurlcheck.js \"test.md\")",
+      "Bash(./bin/mdurlcheck.js \"test.md\" -c 5)",
+      "Bash(./bin/mdurlcheck.js \"test/**/*.md\" -c 5)",
+      "Bash(./bin/mdurlcheck.js \"test/*.md\" -c 5)",
+      "Bash(./bin/mdurlcheck.js \"test/*.md\" -c abc)",
+      "Bash(echo \"Exit: $?\")"
     ]
   }
 }
